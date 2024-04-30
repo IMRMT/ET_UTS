@@ -3,9 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:cardgame/screen/highscore.dart';
 import 'package:cardgame/screen/login.dart';
 import 'package:cardgame/screen/result.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String active_user="";
+
+void doLogout() async {
+  final prefs = await SharedPreferences.getInstance();
+  active_user="";
+  prefs.remove("user_id");
+  MyLogin();
+}
+
+
+Future<String> checkUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    String user_id = prefs.getString("user_id") ?? '';
+    return user_id;
+  }
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+    WidgetsFlutterBinding.ensureInitialized();
+  checkUser().then((String result) {
+    if (result == '')
+      runApp(MyLogin());
+    else {
+      active_user = result;
+      runApp(MyApp());
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +45,7 @@ class MyApp extends StatelessWidget {
       routes: { 'game': (context) => Game(),
                 'result': (context) => Result(),
                 'highscore': (context) => Highscore(),
-                'login': (context) => Login(),
+                'login': (context) => MyLogin(),
                 },
       title: 'Card Game',
       theme: ThemeData(
@@ -82,6 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
       elevation: 16.0,
       child: Column(
         children: <Widget>[
+          UserAccountsDrawerHeader(
+              accountName: Text("Theodorus"),
+              accountEmail: Text(active_user),
+              // accountEmail: Text("Theodorus@gmail.com"),
+              currentAccountPicture: CircleAvatar(
+              backgroundImage:
+                  NetworkImage("https://i.pravatar.cc/150"))
+          ),
           ListTile(
             title: new Text("High Score"),
             leading: new Icon(Icons.numbers_outlined),
@@ -96,13 +130,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.popAndPushNamed(
                     context, 'login');}
           ),
-          // ListTile(
-          //   title: new Text("Game"),
-          //   leading: new Icon(Icons.person),
-          //   onTap: () {
-          //       Navigator.popAndPushNamed(
-          //           context, 'game');}
-          // ),
+          ListTile(
+            // title: new Text("Login "),
+            title: new Text(active_user != ""? "Logout":"Login"),
+            leading: new Icon(Icons.login),
+            onTap: () {
+              if (active_user != "") {
+                doLogout();
+              } else {
+                Navigator.popAndPushNamed(
+                    //ini lebih oke, krn drawernya ketutup kalo balik
+                    context,
+                    'login');
+              }
+            }
+          ),
           
         ],
       ),
