@@ -123,17 +123,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.popAndPushNamed(
                     context, 'highscore');}
           ),
-          ListTile(
-            title: new Text("Logout"),
-            leading: new Icon(Icons.person),
-            onTap: () {
-                Navigator.popAndPushNamed(
-                    context, 'login');}
-          ),
+          // ListTile(
+          //   title: new Text("Logout"),
+          //   leading: new Icon(Icons.person),
+          //   onTap: () {
+          //       Navigator.popAndPushNamed(
+          //           context, 'login');}
+          // ),
           ListTile(
             // title: new Text("Login "),
             title: new Text(active_user != ""? "Logout":"Login"),
-            leading: new Icon(Icons.login),
+            leading: new Icon(active_user != "" ? Icons.logout : Icons.login),
             onTap: () {
               if (active_user != "") {
                 doLogout();

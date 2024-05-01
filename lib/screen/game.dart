@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'package:cardgame/class/user.dart';
+import 'package:cardgame/main.dart';
+import 'package:cardgame/screen/highscore.dart';
 import 'package:cardgame/screen/questionbank.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -29,7 +33,7 @@ class _QuizState extends State<Game> {
   int _initialValue = 30;
   late Timer _timer;
   late Timer _timerGambar;
-  // String _activeUser = "";
+  String _activeUser = "";
 
   late bool _timer2IsActive = false;
 
@@ -86,6 +90,24 @@ class _QuizState extends State<Game> {
     _questions.shuffle();
 
     timerMethodGambar();
+
+    _getActiveUser();
+  }
+
+  void _getActiveUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _activeUser = prefs.getString("user_id") ?? "";
+    });
+  }
+
+  void _saveTopScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? topPoint = prefs.getInt("top_point");
+    if (topPoint == null || _point > topPoint) {
+      prefs.setInt("top_point", _point);
+      prefs.setString("top_user", _activeUser);
+    }
   }
 
   @override
@@ -97,11 +119,10 @@ class _QuizState extends State<Game> {
     super.dispose();
   }
 
-  void timerStart(){
+  void timerStart() {
     _timer = Timer.periodic(
       Duration(milliseconds: 1000),
-      (timer) {
-      },
+      (timer) {},
     );
   }
 
@@ -115,6 +136,15 @@ class _QuizState extends State<Game> {
           if (_hitung > 0) {
             _hitung--;
           } else {
+
+            if(_hitung==0){
+              _question_no++;
+              _hitung=30;
+              if(_question_no == 5){
+                finishQuiz();
+              }
+            }
+  
             if (!_timer2IsActive) {
               _timer.cancel();
               _timer2IsActive = false;
@@ -129,7 +159,7 @@ class _QuizState extends State<Game> {
   //CEK ULANG
   void timerMethodGambar() {
     _timerGambar = Timer.periodic(
-      Duration(milliseconds: 1000),
+      Duration(milliseconds: 3000),
       (timerGambar) {
         setState(() {
           if (_hitungGambar >= 1) {
@@ -241,9 +271,8 @@ class _QuizState extends State<Game> {
       setState(() {
         _img_no == 0;
       });
-    }
-    else if(up < 6){
-        _img_no++;
+    } else if (up < 6) {
+      _img_no++;
     }
   }
 
@@ -299,22 +328,57 @@ class _QuizState extends State<Game> {
   finishQuiz() {
     _timer.cancel();
     _question_no = 0;
-    // _saveTopScore();
+    _saveTopScore();
 
     showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
               title: Text('Quiz'),
-              content: Text('Your point = $_point'),
+              content: _point == 0
+                  ? Text('Sfortunato Indovinatore\n Your point = $_point')
+                  : _point == 100
+                      ? Text('Neofita dell Indovinello\n Your point = $_point')
+                      : _point == 200
+                          ? Text('Principiante dell Indovinello\n Your point = $_point')
+                          : _point == 300
+                              ? Text('Abile Indovinatore\n Your point = $_point')
+                              : _point == 400
+                                  ? Text('Esperto dell Indovinello\n Your point = $_point')
+                                  : _point == 500
+                                      ? Text('Maestro dell Indovinello\n Your point = $_point')
+                                      : Text('')
+                                      ,
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'OK');
+                    user.add(User(
+                        id: user.length+1,
+                        name: active_user,
+                        score : _point));
+                    Navigator.pop(context, 'Main Menu');
                     Navigator.pop(
                       context,
                     );
                   },
-                  child: const Text('OK'),
+                  child: const Text('Main Menu'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Game()));
+                  },
+                  child: const Text('Play Again'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    user.add(User(
+                        id: user.length+1,
+                        name: active_user,
+                        score : _point));
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Highscore()));
+                  },
+                  child: const Text('Leaderboard'),
                 ),
               ],
             ));
