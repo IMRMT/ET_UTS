@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cardgame/main.dart';
 
-String _user_id="";
+String _user_id='';
 
 void doLogin() async {
     //later, we use web service here to check the user id and password
@@ -60,8 +59,8 @@ class _LoginState extends State<Login> {
                 },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    labelText: 'Username',
+                    hintText: 'Enter valid username'),
               ),
             ),
             Padding(

@@ -32,6 +32,7 @@ class _HighscoreState extends State<Highscore> {
 
   @override
   Widget build(BuildContext context) {
+    user.sort((a, b) => b.score.compareTo(a.score));
     return Scaffold(
       appBar: AppBar(
         title: Text('Leaderboard'),
@@ -71,6 +72,9 @@ class _HighscoreState extends State<Highscore> {
       Widget w = Card(
           child: Column(
         children: [
+          Text(
+            'Rank: ${i + 1}'
+          ),
           Text(
             user[i].name,
             style: TextStyle(fontSize: 30),

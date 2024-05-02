@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cardgame/class/user.dart';
 import 'package:cardgame/main.dart';
 import 'package:cardgame/screen/highscore.dart';
@@ -17,6 +18,7 @@ class Game extends StatefulWidget {
 
 class _QuizState extends State<Game> {
   bool animated = false;
+  List<User> score_user = user;
   List<QuestionObj> _questions = [];
   List<AnswerImage> _answerimg = []; //gambar jawaban awal
 
@@ -34,6 +36,8 @@ class _QuizState extends State<Game> {
   late Timer _timer;
   late Timer _timerGambar;
   String _activeUser = "";
+  int maxScoreIndex = (user[0].score > user[1].score) ? 0 : 1;
+
 
   late bool _timer2IsActive = false;
 
@@ -102,11 +106,17 @@ class _QuizState extends State<Game> {
   }
 
   void _saveTopScore() async {
+    int score = user[maxScoreIndex].score;
+    String userboard = user[maxScoreIndex].name;
     final prefs = await SharedPreferences.getInstance();
     final int? topPoint = prefs.getInt("top_point");
     if (topPoint == null || _point > topPoint) {
       prefs.setInt("top_point", _point);
       prefs.setString("top_user", _activeUser);
+    }
+    else if(_point < score || topPoint < score){
+      prefs.setInt("top_point", score);
+      prefs.setString("top_user", userboard);
     }
   }
 
@@ -159,7 +169,7 @@ class _QuizState extends State<Game> {
   //CEK ULANG
   void timerMethodGambar() {
     _timerGambar = Timer.periodic(
-      Duration(milliseconds: 3000),
+      Duration(milliseconds: 100),
       (timerGambar) {
         setState(() {
           if (_hitungGambar >= 1) {

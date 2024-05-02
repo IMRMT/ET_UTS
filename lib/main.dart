@@ -6,12 +6,12 @@ import 'package:cardgame/screen/result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String active_user="";
+String _user_id = "";
 
 void doLogout() async {
   final prefs = await SharedPreferences.getInstance();
-  active_user="";
   prefs.remove("user_id");
-  MyLogin();
+  main();
 }
 
 
