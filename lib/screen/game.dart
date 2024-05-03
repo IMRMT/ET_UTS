@@ -169,7 +169,7 @@ class _QuizState extends State<Game> {
   //CEK ULANG
   void timerMethodGambar() {
     _timerGambar = Timer.periodic(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 3000),
       (timerGambar) {
         setState(() {
           if (_hitungGambar >= 1) {
