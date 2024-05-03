@@ -190,70 +190,109 @@ class _QuizState extends State<Game> {
   }
 
   Widget widget2() {
-    return Column(
-      children: <Widget>[
-        CircularPercentIndicator(
-          radius: 120.0,
-          lineWidth: 20.0,
-          percent: 1 - (_hitung / _initialValue),
-          center: Text(formatTime(_hitung)),
-          progressColor: Colors.red,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _timer.isActive ? _timer.cancel() : timerMethod();
-            });
-          },
-          child: Text(_timer.isActive ? "STOP" : "START"),
-        ),
-        Divider(
-          height: 10,
-        ),
-        Text(_questions[_question_no].narration),
-        TextButton(
-          onPressed: () {
-            checkAnswer(_questions[_question_no].option_a);
-          },
-          child: Image.asset(
-            _questions[_question_no].option_a,
-            height: 200,
-            width: 200,
+  return Column(
+    children: <Widget>[
+      CircularPercentIndicator(
+        radius: 120.0,
+        lineWidth: 20.0,
+        percent: 1 - (_hitung / _initialValue),
+        center: Text(formatTime(_hitung)),
+        progressColor: Colors.red,
+      ),
+      ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _timer.isActive ? _timer.cancel() : timerMethod();
+          });
+        },
+        child: Text(_timer.isActive ? "STOP" : "START"),
+      ),
+      Divider(
+        height: 10,
+      ),
+      Text(_questions[_question_no].narration),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    checkAnswer(_questions[_question_no].option_a);
+                  },
+                  child: Image.asset(
+                    _questions[_question_no].option_a,
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            checkAnswer(_questions[_question_no].option_b);
-          },
-          child: Image.asset(
-            _questions[_question_no].option_b,
-            height: 200,
-            width: 200,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    checkAnswer(_questions[_question_no].option_b);
+                  },
+                  child: Image.asset(
+                    _questions[_question_no].option_b,
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            checkAnswer(_questions[_question_no].option_c);
-          },
-          child: Image.asset(
-            _questions[_question_no].option_c,
-            height: 200,
-            width: 200,
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    checkAnswer(_questions[_question_no].option_c);
+                  },
+                  child: Image.asset(
+                    _questions[_question_no].option_c,
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            checkAnswer(_questions[_question_no].option_d);
-          },
-          child: Image.asset(
-            _questions[_question_no].option_d,
-            height: 200,
-            width: 200,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    checkAnswer(_questions[_question_no].option_d);
+                  },
+                  child: Image.asset(
+                    _questions[_question_no].option_d,
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      ),
+    ],
+  );
+}
+
 
   //CEK ULANG
   //Gambar jawaban
